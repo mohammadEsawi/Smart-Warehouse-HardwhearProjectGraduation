@@ -12,7 +12,7 @@
 
 **A comprehensive automation system integrating robotic arm, conveyor belt, and web-based management interface**
 
-[Demo Video]((https://drive.google.com/drive/folders/1BLD5lV6snDiKQcjj4oHWs4WfJWUhpoFX)) • [Documentation]((https://drive.google.com/drive/folders/1BLD5lV6snDiKQcjj4oHWs4WfJWUhpoFX)) • [Report Issues](https://github.com/mohammadEsawi/SmartWarehouse-HardwhearProjectGraduation/issues)
+[Demo Video](https://drive.google.com/drive/folders/1BLD5lV6snDiKQcjj4oHWs4WfJWUhpoFX)• [Documentation](https://drive.google.com/drive/folders/1BLD5lV6snDiKQcjj4oHWs4WfJWUhpoFX) • [Report Issues](https://github.com/mohammadEsawi/SmartWarehouse-HardwhearProjectGraduation/issues)
 
 </div>
 

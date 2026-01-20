@@ -1,4 +1,6 @@
 # 🏭 Smart Warehouse Automation System
+![graduation project](https://github.com/user-attachments/assets/7bf6e158-b7c7-475b-bbe5-056ab30ee988)
+
 
 <div align="center">
   
@@ -10,7 +12,7 @@
 
 **A comprehensive automation system integrating robotic arm, conveyor belt, and web-based management interface**
 
-[Demo Video](#) • [Documentation](#) • [Report Issues](https://github.com/mohammadEsawi/SmartWarehouse-HardwhearProjectGraduation/issues)
+[Demo Video]([#](https://drive.google.com/drive/folders/1BLD5lV6snDiKQcjj4oHWs4WfJWUhpoFX)) • [Documentation]([#](https://drive.google.com/drive/folders/1BLD5lV6snDiKQcjj4oHWs4WfJWUhpoFX)) • [Report Issues](https://github.com/mohammadEsawi/SmartWarehouse-HardwhearProjectGraduation/issues)
 
 </div>
 
@@ -73,7 +75,3 @@
 - **Inventory Verification**: System-wide stock checking
 - **Error Recovery**: Automatic fault detection and handling
 - **Priority Queue**: Intelligent task scheduling
-
-## 🏗️ Architecture
-
-### System Diagram

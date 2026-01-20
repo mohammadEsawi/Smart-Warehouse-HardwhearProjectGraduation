@@ -1,0 +1,463 @@
+<!-- FILE: index.html - COMPLETE UPDATED VERSION -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Warehouse</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="header-left">
+        <h1>Smart Warehouse Admin</h1>
+        <!-- Mode switch removed: Manual-only UI -->
+      </div>
+      <div class="status-container">
+        <div class="status">
+          <span id="esp32-status" class="badge badge-gray">ESP32: Connecting...</span>
+          <span id="arm-status" class="badge badge-green">Arm: Ready</span>
+          <span id="mode-status" class="badge badge-blue">Manual Mode</span>
+          <span id="conveyor-status" class="badge badge-gray">Conveyor: Idle</span>
+          <span id="strategy-badge" class="badge badge-green">Strategy: NEAREST_EMPTY</span>
+        </div>
+        <div class="loading-indicator">
+          <div class="lds-ring" id="global-loading"><div></div><div></div><div></div><div></div></div>
+          <span id="loading-text">Ready</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel left-panel">
+        <div class="panel-header">
+          <h2>Warehouse Overview</h2>
+          <div class="legend">
+            <div class="legend-item">
+              <div class="legend-color loading-zone"></div>
+              <span>Loading Zone</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color occupied"></div>
+              <span>Occupied (IR Detected)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color empty"></div>
+              <span>Empty</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color ldr-active"></div>
+              <span>LDR Active</span>
+            </div>
+          </div>
+        </div>
+
+       <div class="warehouse-container">
+
+  <!-- Conveyor -->
+  <div class="conveyor-section">
+    <div class="conveyor-label">Conveyor Belt</div>
+
+    <div class="conveyor-status-indicators">
+      <div class="ldr-indicator" id="ldr1-indicator">
+        <div class="ldr-label">IR1 </div>
+        <div class="ldr-light"></div>
+      </div>
+
+      <div class="conveyor" id="conveyor">
+        <div id="conveyor-product" class="conveyor-product">Empty</div>
+      </div>
+
+      <div class="ldr-indicator" id="ldr2-indicator">
+        <div class="ldr-label">IR2</div>
+        <div class="ldr-light"></div>
+      </div>
+    </div>
+
+    <div class="rfid-status">
+      RFID Tag: <span id="rfid-tag">None</span>
+    </div>
+  </div>
+
+  <!-- Loading Zone (FULL WIDTH) -->
+  <div class="loading-zone-wide special-cell" id="loading-zone-cell">
+    <div class="cell-header">
+      <span>Loading Zone</span>
+      <span id="loading-zone-status">EMPTY</span>
+    </div>
+
+ 
+
+    <div class="cell-controls">
+      <button id="btn-loading-check" class="btn-info btn-small">Check</button>
+    </div>
+  </div>
+
+  <!-- Cells Overview -->
+  <div class="cells-grid" id="cells-grid"></div>
+
+</div>
+
+        <div class="stats-bar">
+          <div class="stat">
+            <span class="stat-label">Total Cells:</span>
+            <span class="stat-value" id="total-cells">12</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Occupied:</span>
+            <span class="stat-value" id="occupied-cells">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Available:</span>
+            <span class="stat-value" id="available-cells">12</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Loading Zone:</span>
+            <span class="stat-value" id="loading-status">Empty</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">IR Sensors:</span>
+            <span class="stat-value" id="active-sensors">12/12</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel right-panel">
+        <div class="card mode-controls">
+          <h3>Manual Control</h3>
+
+          <div class="manual-controls" id="manual-controls">
+            <div class="btn-grid">
+              <button id="btn-home" class="btn-primary">
+                <span class="btn-icon">🏠</span>
+                Home Position
+              </button>
+              <!-- Manual: PICK only (no storage / no strategy) -->
+              <button id="btn-pick-conveyor" class="btn-primary">
+                <span class="btn-icon">🧲</span>
+                Pick from Conveyor (Manual)
+              </button>
+            </div>
+  <div class="form-group">
+              <label>Loading Zone Operations:</label>
+              <div class="btn-grid">
+                <button id="btn-loading-place" value="LOADING_PLACE" class="btn-warning">
+                  <span class="btn-icon">📤</span>
+                  Place to Loading
+                </button>
+                <button id="btn-loading-take" value="LOADING_TAKE" class="btn-warning">
+                  <span class="btn-icon">📥</span>
+                  Take from Loading
+                </button>
+              </div>
+            </div>
+              <!-- Auto: full stock cycle (pick + RFID + move to cell based on strategy) -->
+              <button id="btn-manual-stock-from-conveyor" class="btn-warning">
+                <span class="btn-icon">📦</span>
+                Pick From Conveyor (Auto)
+              </button>
+            <div class="form-group">
+              <label>Go to Column:</label>
+              <div class="input-group">
+                <select id="goto-column">
+                  <option value="1">Column 1</option>
+                  <option value="2">Column 2</option>
+                  <option value="3">Column 3</option>
+                  <option value="4">Column 4</option>
+                </select>
+                <button id="btn-goto-column" class="btn-secondary">Go</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Place in Cell:</label>
+              <div class="input-group">
+                <select id="place-col">
+                  <option value="1">Col 1</option>
+                  <option value="2">Col 2</option>
+                  <option value="3">Col 3</option>
+                  <option value="4">Col 4</option>
+                </select>
+                <select id="place-row">
+                  <option value="1">Row 1</option>
+                  <option value="2">Row 2</option>
+                  <option value="3">Row 3</option>
+                </select>
+                <button id="btn-place" class="btn-secondary">Place</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Pick from Cell:</label>
+              <div class="input-group">
+                <select id="pick-col">
+                  <option value="1">Col 1</option>
+                  <option value="2">Col 2</option>
+                  <option value="3">Col 3</option>
+                  <option value="4">Col 4</option>
+                </select>
+                <select id="pick-row">
+                  <option value="1">Row 1</option>
+                  <option value="2">Row 2</option>
+                  <option value="3">Row 3</option>
+                </select>
+                <button id="btn-pick-cell" class="btn-secondary">Pick</button>
+              </div>
+            </div>
+
+          
+
+            <div class="form-group">
+              <label>Manual Command:</label>
+              <div class="input-group">
+                <input
+                  id="manual-cmd"
+                  type="text"
+                  list="command-suggestions"
+                />
+                <datalist id="command-suggestions">
+                  <option value="HOME"></option>
+                  <option value="PICK"></option>
+                  <option value="GOTO 1"></option>
+                  <option value="GOTO 2"></option>
+                  <option value="GOTO 3"></option>
+                  <option value="GOTO 4"></option>
+                  <option value="PLACE 1 1"></option>
+                  <option value="TAKE 1 1"></option>
+                  <option value="LOADING_PLACE"></option>
+                  <option value="LOADING_TAKE"></option>
+                  <option value="LOADING_RETURN"></option>
+                  <option value="LOADING_OPEN"></option>
+                  <option value="LOADING_CLOSE"></option>
+                  <option value="CHECK_LOADING"></option>
+                  <option value="STRATEGY NEAREST"></option>
+                  <option value="STRATEGY FIXED"></option>
+                  <option value="GET_LOADING_STATUS"></option>
+                </datalist>
+                <button id="btn-manual-cmd" class="btn-secondary">Send</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auto Mode UI removed: Manual-only page -->
+
+        <div class="card">
+          <h3>Product Management</h3>
+          <div class="form-column">
+            <div class="form-group">
+              <label>Product Name:</label>
+              <input id="prod-name" type="text" placeholder="Enter product name" />
+            </div>
+            <div class="form-group">
+              <label>SKU:</label>
+              <input id="prod-sku" type="text" placeholder="Optional SKU" />
+            </div>
+            <div class="form-group">
+              <label>RFID UID:</label>
+              <input id="prod-rfid" type="text" placeholder="Optional RFID" />
+            </div>
+            <div class="form-group">
+              <label>Storage Strategy:</label>
+              <select id="prod-strategy">
+                <option value="NEAREST_EMPTY">Nearest</option>
+                <option value="FIXED">Fixed</option>
+              </select>
+            </div>
+            <button id="btn-add-product" class="btn-primary">
+              Add New Product
+            </button>
+          </div>
+
+          <div class="divider"></div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>sensor summary</h3>
+          </div>
+     
+          <div class="sensor-summary">
+            <div class="summary-item">
+              <span class="summary-label">Active Sensors:</span>
+              <span class="summary-value" id="active-sensor-count">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Occupied Cells:</span>
+              <span class="summary-value" id="occupied-sensor-count">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Last Update:</span>
+              <span class="summary-value" id="sensor-update-time">--:--:--</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent Operations</h3>
+            <button id="btn-refresh-ops" class="btn-icon">⟳</button>
+          </div>
+          <div class="table-container">
+            <table id="ops-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Type</th>
+                  <th>Command</th>
+                  <th>Status</th>
+                  <th>Cell</th>
+                  <th>Product</th>
+                  <th>Strategy</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-content">
+        <div class="lds-ring large"><div></div><div></div><div></div><div></div></div>
+        <h3 id="loading-title">Processing Command</h3>
+        <p id="loading-message">Please wait while the arm executes the command...</p>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="loading-details">
+          <div class="detail-item">
+            <span class="detail-label">Current Step:</span>
+            <span class="detail-value" id="current-step">Initializing...</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Estimated Time:</span>
+            <span class="detail-value" id="estimated-time">5s</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Storage Strategy:</span>
+            <span class="detail-value" id="loading-strategy">NEAREST_EMPTY</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add Auto Task</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+                <div class="modal-body">
+          <div class="form-group">
+            <label>Task Type:</label>
+            <select id="task-type">
+              <option value="STOCK_FROM_CONVEYOR">Stock from Conveyor</option>
+              <option value="RETRIEVE_TO_LOADING">Retrieve to Loading Zone</option>
+              <option value="MOVE_TO_LOADING">Move Cell -> Loading Zone</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="task-cell-group">
+            <label>Cell (optional):</label>
+            <select id="task-cell"></select>
+            <small class="hint">For Retrieve / Move: choose the source cell (optional when selecting Product).</small>
+          </div>
+
+          <div class="form-group" id="task-product-group">
+            <label>Product (optional):</label>
+            <select id="task-product"></select>
+          </div>
+
+          <div class="form-group">
+            <label>Storage Strategy:</label>
+            <select id="task-strategy">
+              <option value="NEAREST_EMPTY">Nearest</option>
+              <option value="FIXED">Fixed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Priority:</label>
+            <select id="task-priority">
+              <option value="LOW">Low</option>
+              <option value="MEDIUM" selected>Medium</option>
+              <option value="HIGH">High</option>
+              <option value="URGENT">Urgent</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-cancel-task" class="btn-secondary">Cancel</button>
+          <button id="btn-save-task" class="btn-primary">Add Task</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Zone Operation Modal (better than browser prompts) -->
+    <div id="loading-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="loading-modal-title">Loading Zone Operation</h3>
+          <button class="modal-close" id="loading-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Action</label>
+            <select id="loading-action">
+              <option value="place_to_loading">Place to Loading (from a cell)</option>
+              <option value="take_from_loading">Take from Loading (to a cell)</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="loading-source-group">
+            <label>Source Cell (must be OCCUPIED)</label>
+            <select id="loading-source-cell"></select>
+          </div>
+
+          <div class="form-group" id="loading-target-group" style="display:none;">
+            <label>Target Cell (must be EMPTY)</label>
+            <select id="loading-target-cell"></select>
+          </div>
+
+          <div id="loading-modal-info" class="small-muted" style="margin-top:8px;"></div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-cancel-loading" class="btn-secondary">Cancel</button>
+          <button id="btn-confirm-loading" class="btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manual Stock From Conveyor Modal (choose strategy) -->
+    <div id="manual-stock-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Stock From Conveyor</h3>
+          <button class="modal-close" id="manual-stock-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Storage Strategy</label>
+            <select id="manual-stock-strategy">
+              <option value="NEAREST_EMPTY">Nearest Empty</option>
+              <option value="FIXED">Fixed Mapping</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-cancel-manual-stock" class="btn-secondary">Cancel</button>
+          <button id="btn-confirm-manual-stock" class="btn-primary">Start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notification-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

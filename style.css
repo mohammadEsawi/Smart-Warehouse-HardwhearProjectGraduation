@@ -1,0 +1,2552 @@
+/* FILE: style.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --primary-color: #0ea5e9;
+  --primary-dark: #0284c7;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --info-color: #8b5cf6;
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --bg-darker: #020617;
+  --border-color: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --cell-occupied: #10b981;
+  --cell-empty: #475569;
+  --cell-loading: #f59e0b;
+  --cell-selected: #0ea5e9;
+  --ldr-active: #10b981;
+  --ldr-inactive: #475569;
+  --ir-occupied: #10b981;
+  --ir-empty: #64748b;
+  --sensor-bg: #1e293b;
+}
+
+/* Add new styles for conveyor indicators */
+.conveyor-status-indicators {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.ldr-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  min-width: 60px;
+}
+
+.ldr-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ldr-light {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ldr-inactive);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.ldr-light.active {
+  background: var(--ldr-active);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.7);
+  animation: pulse 1.5s infinite;
+}
+
+.rfid-status {
+  text-align: center;
+  margin-top: 10px;
+  padding: 8px;
+  background: var(--bg-card);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+}
+
+.rfid-status span:first-child {
+  color: var(--text-secondary);
+}
+
+#rfid-tag {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-family: monospace;
+}
+
+.conveyor {
+  height: 60px;
+  background: linear-gradient(90deg, #334155, #475569, #334155);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  margin: 0 10px;
+}
+
+.conveyor.product-detected {
+  background: linear-gradient(90deg, #059669, #10b981, #059669);
+  animation: conveyor-active 2s ease-in-out infinite;
+}
+
+.conveyor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: conveyor-move 3s linear infinite;
+}
+
+@keyframes conveyor-move {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes conveyor-active {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.7);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.9);
+  }
+}
+
+.conveyor-product {
+  background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  z-index: 1;
+}
+
+.conveyor-product.has-product {
+  animation: pulse 2s infinite;
+}
+
+.auto-status {
+  background: var(--bg-darker);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-color);
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.status-item:last-child {
+  margin-bottom: 0;
+}
+
+.status-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.status-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 3px 8px;
+  background: var(--bg-card);
+  border-radius: 4px;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* Existing styles continue... */
+body {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--bg-darker);
+  border-bottom: 2px solid var(--border-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.topbar h1 {
+  font-size: 24px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-switch label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.mode-switch select {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-switch select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.status {
+  display: flex;
+  gap: 10px;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.badge-gray {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.badge-green {
+  background: linear-gradient(135deg, var(--success-color), #059669);
+  color: white;
+}
+
+.badge-red {
+  background: linear-gradient(135deg, var(--danger-color), #dc2626);
+  color: white;
+}
+
+.badge-blue {
+  background: linear-gradient(135deg, var(--primary-color), #2563eb);
+  color: white;
+}
+
+.badge-yellow {
+  background: linear-gradient(135deg, var(--warning-color), #d97706);
+  color: white;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#loading-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.panel {
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 120px);
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.panel-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-color.loading-zone {
+  background: var(--cell-loading);
+}
+
+.legend-color.occupied {
+  background: var(--cell-occupied);
+}
+
+.legend-color.empty {
+  background: var(--cell-empty);
+}
+
+.legend-color.ldr-active {
+  background: var(--ldr-active);
+}
+
+/* ADDED: Algorithm Selector */
+.algorithm-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.algorithm-selector label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.algorithm-selector select {
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--text-primary);
+  font-size: 12px;
+  min-width: 140px;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.warehouse-container {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.conveyor-section {
+  background: var(--bg-darker);
+  border-radius: 10px;
+  padding: 15px;
+  border: 2px solid var(--border-color);
+}
+
+.conveyor-label {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+/* ADDED: Sensor Controls Section */
+.sensor-controls-section {
+  background: var(--bg-darker);
+  border-radius: 10px;
+  padding: 15px;
+  border: 1px solid var(--border-color);
+}
+
+.sensor-controls-section h3 {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.auto-store-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.auto-store-controls input {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.auto-store-controls input::placeholder {
+  color: var(--text-muted);
+}
+
+.grid-container {
+  display: flex;
+  gap: 20px;
+  align-items: start;
+}
+
+.special-cell {
+  flex: 0 0 180px;
+}
+
+
+.cell,
+.special-cell {
+  background: var(--bg-darker);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.cell:hover,
+.special-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  border-color: var(--primary-color);
+}
+
+.cell.occupied {
+  border-color: var(--cell-occupied);
+}
+
+.cell.empty {
+  border-color: var(--cell-empty);
+}
+
+
+.special-cell {
+  border-color: var(--cell-loading);
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.1),
+    rgba(251, 191, 36, 0.05)
+  );
+}
+
+.cell.selected {
+  border-color: var(--cell-selected);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.3);
+}
+
+.cell-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.cell-header .cell-status {
+  background: var(--bg-card);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* ADDED: IR Indicator in Cell Header */
+.ir-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ir-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #666;
+}
+
+.ir-light.occupied {
+  background: var(--ir-occupied);
+  box-shadow: 0 0 4px var(--ir-occupied);
+}
+
+.ir-light.empty {
+  background: var(--ir-empty);
+}
+
+/* IR RESERVED BADGE (shows when IR detects a body) */
+.ir-reserved-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.55);
+  color: #d1fae5;
+  display: none;
+  pointer-events: none;
+}
+
+.cell.ir-occupied .ir-reserved-badge {
+  display: inline-flex; /* صحيح */
+  align-items: center;
+  gap: 6px;
+}
+
+.cell-body {
+  font-size: 14px;
+}
+
+.cell-product-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.cell-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.cell-qty {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.cell-sku {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ADDED: Sensor Readings in Loading Zone */
+.sensor-readings {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+}
+
+.sensor-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.sensor-label {
+  color: var(--text-secondary);
+}
+
+.sensor-value {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stats-bar {
+  display: flex;
+  justify-content: space-around;
+  padding: 16px 20px;
+  background: var(--bg-darker);
+  border-top: 1px solid var(--border-color);
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.card {
+  background: var(--bg-darker);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.card h3 {
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.btn-row,
+.btn-grid {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--border-color);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success-color), #059669);
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, var(--warning-color), #d97706);
+  color: white;
+}
+
+.btn-warning:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger-color), #dc2626);
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-action {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  text-align: center;
+}
+
+.btn-action:hover:not(:disabled) {
+  background: var(--border-color);
+  border-color: var(--primary-color);
+}
+
+.btn-icon {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 6px;
+  min-width: auto;
+}
+
+.btn-icon:hover {
+  color: var(--text-primary);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input-group select,
+.input-group input {
+  flex: 1;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input,
+select {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+#ops-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+#ops-table thead {
+  background: var(--bg-card);
+}
+
+#ops-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+}
+
+#ops-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+#ops-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+#ops-table tbody tr:hover {
+  background: rgba(14, 165, 233, 0.1);
+}
+
+#ops-table tbody tr.status-pending {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+#ops-table tbody tr.status-completed {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+#ops-table tbody tr.status-error {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: var(--primary-color) transparent transparent transparent;
+}
+
+.lds-ring.large {
+  width: 60px;
+  height: 60px;
+}
+
+.lds-ring.large div {
+  width: 48px;
+  height: 48px;
+  margin: 6px;
+  border-width: 4px;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(2, 6, 23, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.loading-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+
+.loading-content {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.loading-content h3 {
+  margin: 20px 0 10px;
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.loading-content p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.progress-container {
+  height: 6px;
+  background: var(--bg-darker);
+  border-radius: 3px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--success-color)
+  );
+  width: 0%;
+  transition: width 0.3s ease;
+  border-radius: 3px;
+}
+
+.loading-details {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.detail-item {
+  text-align: center;
+}
+
+.detail-label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.task-queue {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.task-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-item .task-type {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.task-item .task-priority {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--bg-dark);
+}
+
+.task-priority.high {
+  color: var(--danger-color);
+}
+.task-priority.medium {
+  color: var(--warning-color);
+}
+.task-priority.low {
+  color: var(--success-color);
+}
+
+.empty-queue {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 20px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 20px 0;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(2, 6, 23, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ADDED: Notification */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 300px;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+  z-index: 1002;
+  overflow: hidden;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-icon {
+  font-size: 20px;
+}
+
+.notification-message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.notification-success {
+  border-left: 4px solid var(--success-color);
+  background: linear-gradient(
+    90deg,
+    rgba(16, 185, 129, 0.1),
+    transparent
+  );
+}
+
+.notification-error {
+  border-left: 4px solid var(--danger-color);
+  background: linear-gradient(
+    90deg,
+    rgba(239, 68, 68, 0.1),
+    transparent
+  );
+}
+
+.notification-warning {
+  border-left: 4px solid var(--warning-color);
+  background: linear-gradient(
+    90deg,
+    rgba(245, 158, 11, 0.1),
+    transparent
+  );
+}
+
+.notification-info {
+  border-left: 4px solid var(--primary-color);
+  background: linear-gradient(
+    90deg,
+    rgba(14, 165, 233, 0.1),
+    transparent
+  );
+}
+
+.cell-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.cell-loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+[data-tooltip]:hover::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-darker);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  border: 1px solid var(--border-color);
+  z-index: 1000;
+  margin-bottom: 5px;
+}
+
+[data-tooltip]:hover::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--border-color);
+  margin-bottom: -5px;
+}
+
+/* ADDED: Sensor Status Grid */
+.sensor-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.sensor-status-item {
+  background: var(--sensor-bg);
+  border-radius: 6px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.sensor-status-item .sensor-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.sensor-status-item .sensor-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+::selection {
+  background: rgba(14, 165, 233, 0.3);
+  color: var(--text-primary);
+}
+
+/* ADDED: Cell target animation */
+.cell.target-cell {
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: #f59e0b;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  }
+  50% {
+    border-color: #fbbf24;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
+  }
+}
+
+.task-status {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--bg-dark);
+  color: var(--text-secondary);
+}
+
+.task-status.PENDING {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning-color);
+}
+
+.task-status.PROCESSING {
+  background: rgba(14, 165, 233, 0.2);
+  color: var(--primary-color);
+}
+
+.task-status.COMPLETED {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success-color);
+}
+
+.task-status.FAILED {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--danger-color);
+}
+
+/* Responsive improvements */
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-container {
+    flex-direction: column;
+  }
+
+  .special-cell {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .header-left {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .status-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cells-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .conveyor-status-indicators {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .ldr-indicator {
+    width: 100%;
+  }
+  
+  .conveyor {
+    margin: 10px 0;
+  }
+  
+  .algorithm-selector {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .sensor-status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Loading animation for busy cells */
+.cell.busy {
+  position: relative;
+  overflow: hidden;
+}
+
+.cell.busy::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: loading-shimmer 1.5s infinite;
+}
+
+/* Enhanced conveyor animation */
+.conveyor.product-detected {
+  animation: conveyor-active 2s ease-in-out infinite;
+}
+
+/* Additional styles for IR sensors and loading zone */
+.cell-sensor {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sensor-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ldr-inactive);
+}
+
+.sensor-status.active {
+  background: var(--ldr-active);
+  box-shadow: 0 0 5px var(--ldr-active);
+}
+
+.loading-zone-sensors {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.sensor-info {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.loading-zone.occupied {
+  border-color: var(--cell-occupied);
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.1),
+    rgba(16, 185, 129, 0.05)
+  );
+}
+
+.loading-zone.empty {
+  border-color: var(--cell-empty);
+}
+
+/* Strategy badges */
+.badge-purple {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+}
+
+/* Conveyor manual mode */
+.conveyor.manual-mode {
+  border-color: var(--warning-color);
+  animation: conveyor-manual 2s ease-in-out infinite;
+}
+
+@keyframes conveyor-manual {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive improvements for new controls */
+@media (max-width: 768px) {
+  .btn-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cell-sensor {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .sensor-status {
+    align-self: flex-end;
+  }
+}
+
+/* ========== NEW STYLES FOR UPDATED FEATURES ========== */
+
+/* Header improvements */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.strategy-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.strategy-select label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.strategy-select select {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 150px;
+}
+
+.strategy-select select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+}
+
+.sensor-counts {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.sensor-count-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.sensor-count-item span {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Loading Zone Cell */
+#loading-zone-cell {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+#loading-zone-cell .cell-controls {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.btn-small {
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  min-height: auto;
+}
+
+.loading-zone-sensors {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.sensor-info {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+/* Conveyor Controls */
+.conveyor-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* IR Sensor Grid */
+.sensor-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.sensor-row {
+  display: flex;
+  gap: 8px;
+}
+
+.sensor-cell {
+  flex: 1;
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+  transition: all 0.3s ease;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sensor-cell.occupied {
+  border-color: var(--cell-occupied);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.sensor-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sensor-label {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.sensor-pin {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: monospace;
+  margin-bottom: 6px;
+}
+
+.sensor-status {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sensor-status[data-status="empty"] {
+  background: rgba(71, 85, 105, 0.2);
+  color: var(--text-secondary);
+}
+
+.sensor-status[data-status="occupied"] {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--cell-occupied);
+}
+
+.sensor-status[data-status="error"] {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--danger-color);
+}
+
+.sensor-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: var(--bg-darker);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin-top: 10px;
+}
+
+.summary-item {
+  text-align: center;
+  flex: 1;
+}
+
+.summary-label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.summary-value {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Cell sensor indicator in warehouse grid */
+.cell-sensor {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cell-sensor small {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.cell-sensor-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ldr-inactive);
+}
+
+.cell-sensor-status.active {
+  background: var(--ldr-active);
+  box-shadow: 0 0 5px var(--ldr-active);
+}
+
+.cell-sensor-status.error {
+  background: var(--danger-color);
+  box-shadow: 0 0 5px var(--danger-color);
+}
+
+/* Operations table new column */
+#ops-table th:nth-child(7),
+#ops-table td:nth-child(7) {
+  width: 100px;
+}
+
+/* Legend additions */
+.legend-color.sensor-active {
+  background: #8b5cf6;
+}
+
+/* Strategy buttons */
+.btn-strategy {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn-strategy.active {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border-color: #7c3aed;
+}
+
+/* Modal improvements */
+#task-parameters {
+  font-family: monospace;
+  font-size: 12px;
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 8px;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* Loading overlay improvements */
+#loading-strategy {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+/* Status badges */
+.badge-purple {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+}
+
+.badge-orange {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .strategy-select {
+    width: 100%;
+  }
+  
+  .strategy-select select {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .sensor-counts {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .sensor-row {
+    flex-wrap: wrap;
+  }
+  
+  .sensor-cell {
+    flex: 0 0 calc(25% - 6px);
+    min-height: 60px;
+  }
+  
+  .sensor-summary {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .conveyor-controls {
+    flex-wrap: wrap;
+  }
+  
+  .btn-small {
+    flex: 1;
+    min-width: 80px;
+  }
+  
+  #loading-zone-cell .cell-controls {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .sensor-cell {
+    flex: 0 0 calc(50% - 4px);
+  }
+  
+  .sensor-label {
+    font-size: 10px;
+  }
+  
+  .sensor-pin {
+    font-size: 9px;
+  }
+  
+  .sensor-status {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+}
+
+/* Animation for sensor updates */
+@keyframes sensor-update {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.sensor-cell.updated {
+  animation: sensor-update 0.5s ease;
+}
+
+/* Conveyor manual mode */
+.conveyor.manual-mode {
+  border: 2px solid var(--warning-color);
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: var(--warning-color); }
+  50% { border-color: #fbbf24; }
+}
+
+/* Loading zone status indicators */
+#loading-zone-cell.occupied {
+  border-color: var(--cell-occupied);
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.1),
+    rgba(16, 185, 129, 0.05)
+  );
+}
+
+#loading-zone-cell.processing {
+  border-color: var(--warning-color);
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.1),
+    rgba(245, 158, 11, 0.05)
+  );
+}
+
+/* Tooltip improvements */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:hover::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-darker);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-tooltip]:hover::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--border-color);
+  margin-bottom: -5px;
+}
+
+
+/* =========================================================
+   PATCH (APPENDED):
+   - Hide Storage Strategy section
+   - Fix overlap between Cells Overview & Conveyor
+   - Non-destructive: original styles above remain unchanged
+   ========================================================= */
+
+/* Hide storage strategy completely */
+.storage-strategy,
+#storage-strategy,
+.strategy,
+#strategy,
+.storageStrategy,
+.strategy-panel,
+#strategy-panel {
+  display: none !important;
+}
+
+/* Ensure main areas do not overlap */
+.warehouse-top, #warehouse-top,
+.top-area, #top-area {
+  display: grid !important;
+  grid-template-columns: 120px 1fr 560px !important;
+  gap: 18px !important;
+  align-items: start !important;
+  position: relative !important;
+}
+
+/* Right side (cells + LDR2) */
+.right-area, #right-area {
+  display: grid !important;
+  grid-template-columns: 1fr 120px !important;
+  gap: 14px !important;
+}
+
+/* Cells grid */
+.cells-grid, #cells-grid,
+.cellsGrid, #cellsGrid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+/* Bottom section */
+.warehouse-bottom, #warehouse-bottom,
+.bottom-area, #bottom-area {
+  display: grid !important;
+  grid-template-columns: 360px 1fr !important;
+  gap: 18px !important;
+}
+
+/* Responsive fixes */
+@media (max-width: 980px) {
+  .warehouse-top, #warehouse-top,
+  .top-area, #top-area {
+    grid-template-columns: 1fr !important;
+  }
+
+  .right-area, #right-area {
+    grid-template-columns: 1fr !important;
+  }
+
+  .warehouse-bottom, #warehouse-bottom,
+  .bottom-area, #bottom-area {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cells-grid, #cells-grid,
+  .cellsGrid, #cellsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .cells-grid, #cells-grid,
+  .cellsGrid, #cellsGrid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.warehouse-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Loading Zone Full Width */
+.loading-zone-wide {
+  width: 100%;
+}
+
+/* Cells Grid */
+
+
+/* Cell */
+.cell {
+  min-height: 30px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cells-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .cells-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* إضافة أنماط IR sensor الجديدة */
+
+/* IR Sensor Indicator */
+.ir-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.ir-light {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ir-empty);
+  border: 1px solid #666;
+  transition: all 0.3s ease;
+}
+
+.ir-light.occupied {
+  background: var(--ir-occupied);
+  box-shadow: 0 0 8px var(--ir-occupied);
+  border-color: var(--ir-occupied);
+}
+
+.ir-light.active {
+  background: var(--ldr-active);
+  box-shadow: 0 0 8px var(--ldr-active);
+}
+
+.ir-light.inactive {
+  background: var(--danger-color);
+  box-shadow: 0 0 4px var(--danger-color);
+}
+
+/* IR Reserved Badge */
+.ir-reserved-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.8);
+  color: #d1fae5;
+  display: none;
+  pointer-events: none;
+  z-index: 2;
+  text-transform: uppercase;
+}
+
+.cell.ir-occupied .ir-reserved-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0);
+  }
+}
+
+/* Cell Sensor Status */
+.cell-sensor {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+}
+
+.sensor-text {
+  color: var(--text-secondary);
+}
+
+.sensor-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ldr-inactive);
+  transition: all 0.3s ease;
+}
+
+.sensor-status.active {
+  background: var(--ldr-active);
+  box-shadow: 0 0 6px var(--ldr-active);
+}
+
+.sensor-status.inactive {
+  background: var(--danger-color);
+  box-shadow: 0 0 4px var(--danger-color);
+}
+
+/* IR Occupied Cell Style */
+.cell.ir-occupied {
+  border-left: 4px solid var(--cell-occupied);
+  animation: ir-pulse 3s infinite;
+}
+
+@keyframes ir-pulse {
+  0%, 100% {
+    border-left-color: var(--cell-occupied);
+  }
+  50% {
+    border-left-color: #86efac;
+  }
+}
+
+.cell.ir-empty {
+  border-left: 4px solid var(--cell-empty);
+}
+
+/* تحديث أنماط Conveyor */
+.conveyor.product-detected {
+  background: linear-gradient(90deg, #059669, #10b981, #059669);
+  animation: conveyor-active 2s ease-in-out infinite;
+}
+
+.conveyor:not(.product-detected) {
+  background: linear-gradient(90deg, #334155, #475569, #334155);
+}
+
+/* Sensor Summary Styles */
+.sensor-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 15px;
+  background: var(--bg-darker);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin-top: 10px;
+}
+
+.summary-item {
+  text-align: center;
+  padding: 10px;
+}
+
+.summary-label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.summary-value {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Loading Zone Status */
+#loading-zone-cell.occupied {
+  border-color: var(--cell-occupied);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+}
+
+#loading-zone-cell:not(.occupied) {
+  border-color: var(--cell-empty);
+}
+
+/* نمط إضافي للخلية التي لديها منتج مخزن وIR يرى الجسم */
+.cell.ir-confirmed {
+  border-left: 6px solid #22c55e;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+.cell.ir-occupied:not(.occupied) {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), transparent);
+  border-color: #22c55e;
+}
+
+.cell.ir-empty {
+  border-left: 4px solid #64748b;
+}
+
+.ir-reserved-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(34, 197, 94, 0.15));
+  border: 1px solid rgba(34, 197, 94, 0.8);
+  color: #d1fae5;
+  display: none;
+  pointer-events: none;
+  z-index: 2;
+  text-transform: uppercase;
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0);
+  }
+}
+
+/* تهيئة أولية للخلايا */
+.cell:not([data-ir-occupied="1"]) .ir-reserved-badge {
+  display: none !important;
+}
+
+.cell:not(.ir-occupied) {
+  border-left: 2px solid var(--border-color);
+}
+
+/* تأكيد أن الخلايا تبدأ بحالة فارغة */
+.cells-grid .cell {
+  border-left-color: var(--border-color);
+}
+
+.cells-grid .cell.occupied {
+  border-left-color: var(--cell-occupied);
+}
+
+/* إصلاح الأنماط المضافة حديثاً في نهاية الملف */
+.cell.ir-confirmed {
+  border-left: 6px solid #22c55e !important;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+.cell.ir-occupied:not(.occupied) {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), transparent);
+  border-color: #22c55e !important;
+}
+
+/* تأكد أن الأنماط الجديدة لا تتضارب مع القديمة */
+.cell.ir-occupied {
+  border-left: 4px solid #22c55e !important;
+}
+
+.cell.ir-empty {
+  border-left: 4px solid #64748b !important;
+}
+
+/* إعادة تعريف .ir-reserved-badge ليكون واضحاً */
+.ir-reserved-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(34, 197, 94, 0.15));
+  border: 1px solid rgba(34, 197, 94, 0.8);
+  color: #d1fae5;
+  display: none !important; /* مهم: none افتراضيًا */
+  pointer-events: none;
+  z-index: 2;
+  text-transform: uppercase;
+}
+
+/* =====================
+   RESERVED cell styling
+   ===================== */
+.cell.reserved {
+  border: 2px dashed rgba(245, 158, 11, 0.9);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+}
+
+.cell.reserved .cell-product-name {
+  opacity: 0.95;
+}
+
+.cell.ir-occupied .ir-reserved-badge {
+  display: inline-flex !important; /* يظهر فقط عندما تكون محجوزة */
+  animation: pulse-badge 2s infinite;
+}
+/* أضف هذا في نهاية الملف */
+/* إصلاح عرض الخلايا */
+.cells-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 10px !important;
+  margin: 20px 0 !important;
+}
+
+/* إصلاح عرض loading zone */
+.loading-zone-wide {
+  width: 100% !important;
+  margin-bottom: 20px !important;
+}
+
+/* إصلاح أزرار التحكم */
+.btn-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+  gap: 10px !important;
+}
+
+/* أضف هذه الأنماط في نهاية الملف */
+
+/* تحسين عرض conveyor */
+.conveyor-status-indicators {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.ldr-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  min-width: 60px;
+}
+
+.ldr-light {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #475569;
+  transition: all 0.3s;
+}
+
+.ldr-light.active {
+  background: #10b981;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* تحسين عرض الخلايا */
+.cells-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.cell {
+  min-height: 100px;
+  position: relative;
+}
+
+.cell.ir-occupied {
+  border-left: 4px solid #10b981;
+}
+
+.cell.ir-occupied .ir-reserved-badge {
+  display: flex !important;
+}
+
+.ir-reserved-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 12px;
+  font-size: 10px;
+  color: #86efac;
+  display: none;
+}
+
+/* أزرار التحكم الجديدة */
+.enhanced-controls {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.btn-task {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.btn-task i {
+  font-size: 16px;
+}
+
+/* تحسين modal المهام */
+.modal-body .form-group {
+  margin-bottom: 15px;
+}
+
+#task-parameters {
+  font-family: monospace;
+  font-size: 12px;
+  min-height: 80px;
+  resize: vertical;
+}
